@@ -4,6 +4,7 @@ import Card from "../../components/card";
 import ChartSection from "../../components/chart";
 import BarChartSection from "../../components/bar";
 import RecentRecordings from "../../components/recent-recordings";
+import RecentPlannings from "../../components/recent-plannings";
 
 
 const cardsData = [
@@ -58,7 +59,7 @@ const Dashboard = () => {
                         <RecentRecordings />
                     </div>
                     <div className="w-full h-full col-span-2 row-span-2 md:col-span-2">
-                        <RecentRecordings />
+                        <RecentPlannings />
                     </div>
                 </div>
 

@@ -5,9 +5,10 @@ const AppContext = createContext();
 
 const AppContextProvider = ({ children }) => {
     const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true)
+    const [isMenuItemCollapsed, setIsMenuItemCollapsed] = useState(true)
     return (
         <AppContext.Provider
-            value={{ isSidebarCollapsed, setIsSidebarCollapsed }}
+            value={{ isSidebarCollapsed, setIsSidebarCollapsed, isMenuItemCollapsed, setIsMenuItemCollapsed }}
         >
             {children}
         </AppContext.Provider>

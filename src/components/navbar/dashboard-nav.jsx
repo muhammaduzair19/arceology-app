@@ -1,8 +1,10 @@
 import { Bell, ChevronDown, Menu, Settings } from "lucide-react"
 import { useAppContext } from "../../context/app-context"
+import { useState } from "react"
 
 const Navbar = () => {
     const { isSidebarCollapsed, setIsSidebarCollapsed } = useAppContext()
+    const [dropdownMenu, setDropdownMenu] = useState(false)
 
     return (
         <div className="w-full h-12 bg-white shadow-md flex sticky top-0 z-20">
@@ -34,12 +36,29 @@ const Navbar = () => {
                             Person Ispum
                         </p>
                     </div>
-                    <button className="p-2 transition-colors rounded-full hover:bg-gray-100" >
+                    <button
+                        onClick={() => setDropdownMenu(!dropdownMenu)}
+                        className="p-2 block md:hidden transition-colors rounded-full hover:bg-gray-100" >
                         <ChevronDown className="w-5 h-5" strokeWidth={1} />
                     </button>
 
                 </div>
             </div>
+            {
+                dropdownMenu && (
+                    <div className="absolute flex flex-col md:hidden transition-all ease-linear bg-white right-0 top-10 px-3 mx-3 rounded-sm py-2" >
+                        <button className="p-2 transition-colors rounded-full flex text-xs items-center gap-2 hover:bg-gray-100">
+                            <Bell className="w-4 h-4" strokeWidth={1} />
+                            <p>Notifications</p>
+                        </button>
+                        <button className="p-2 transition-colors rounded-full flex text-xs items-center gap-2 hover:bg-gray-100">
+                            <Settings className="w-4 h-4" strokeWidth={1} />
+                            <p>Settings</p>
+                        </button>
+                    </div>
+                )
+            }
+
 
         </div >
     )

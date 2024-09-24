@@ -1,14 +1,19 @@
 import { Link } from "react-router-dom";
 import { useAppContext } from "../../context/app-context"
-import { Award, ChartColumnStacked, CircleHelp, Folder, Home, House, Layout, List, MessageSquareMore, Settings, Star, Tag, UserRound, Users } from "lucide-react";
+import { Award, ChartColumnStacked, CircleHelp, Folder, Home, List, MessageSquareMore, Settings, Star, Tag, UserRound, Users } from "lucide-react";
 
 const SidebarLink = ({ to, icon: Icon, label, isCollapsed, }) => {
+    const { setIsSidebarCollapsed } = useAppContext();
     // const pathname = usePathname();
     // const isActive = pathname === href || (pathname === '/' && href === '/dashboard');
     const isActive = false;
 
     return (
-        <Link to={to}>
+        <Link
+            onClick={() => setIsSidebarCollapsed(true)}
+            to={to}
+
+        >
             <div
                 className={`cursor-pointer flex items-center  transition-all ease-in  duration-300
                     ${isCollapsed ? 'justify-center py-2' : 'justify-start px-8 py-2'}
@@ -80,6 +85,15 @@ const MenuLinks = [
 ]
 
 
+const TagItem = ({ label }) => {
+    const { isMenuItemCollapsed } = useAppContext();
+    return (
+        <div className={`my-3 ${isMenuItemCollapsed ? 'py-2 text-center hidden md:block' : 'px-8 py-2 '}`} >
+            <p className="text-xs text-gray-600 font-semibold opacity-70 truncate" >{label}</p>
+        </div>
+    )
+}
+
 
 
 const Sidebar = () => {
@@ -87,12 +101,10 @@ const Sidebar = () => {
 
     const { isSidebarCollapsed } = useAppContext();
     return (
-        <div className={`${isSidebarCollapsed ? 'w-0 md:w-20' : 'w-60'} fixed  bg-white top-12 h-full shadow-md transition-all ease-in  duration-300`} >
+        <div className={`${isSidebarCollapsed ? 'w-0 md:w-20' : 'w-60'} fixed  bg-white top-12 z-10 h-full shadow-md transition-all ease-in  duration-300`} >
             <div className="flex-grow">
                 <div>
-                    <div className={`my-3 ${isSidebarCollapsed ? 'py-2 text-center hidden md:block' : 'px-8 py-2 '}`} >
-                        <p className="text-xs text-gray-600 font-semibold opacity-70 truncate" >Menu</p>
-                    </div>
+                    <TagItem label={'Menu'} />
                     {
                         MenuLinks?.map((menu) => (
                             <SidebarLink
@@ -106,9 +118,7 @@ const Sidebar = () => {
                     }
                 </div>
                 <div>
-                    <div className={`my-3 ${isSidebarCollapsed ? 'py-2 text-center hidden md:block' : 'px-8 py-2'}`} >
-                        <p className="text-xs text-gray-600 font-semibold opacity-70" >Other Information</p>
-                    </div>
+                    <TagItem label={'Other Information'} />
 
                     <SidebarLink
                         to={'/'}
@@ -124,10 +134,7 @@ const Sidebar = () => {
                     />
                 </div>
                 <div>
-                    <div className={`my-3 ${isSidebarCollapsed ? 'justify-center py-2 text-center hidden md:block'  : 'justify-start px-8 py-2 '}`} >
-                        <p className="text-xs text-gray-600 font-semibold opacity-70 " >Settings</p>
-                    </div>
-
+                    <TagItem label={'Settings'} />
                     <SidebarLink
                         to={'/'}
                         icon={UserRound}
