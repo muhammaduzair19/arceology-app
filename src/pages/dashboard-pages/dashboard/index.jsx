@@ -1,10 +1,10 @@
 import { Amphora, Shovel, UserRound, UsersRound } from "lucide-react";
-import BreadCrumb from "../../components/bread-crumb"
-import Card from "../../components/card";
-import ChartSection from "../../components/chart";
-import BarChartSection from "../../components/bar";
-import RecentRecordings from "../../components/recent-recordings";
-import RecentPlannings from "../../components/recent-plannings";
+import BreadCrumb from "../../../components/bread-crumb"
+import Card from "../../../components/card";
+import ChartSection from "../../../components/chart";
+import BarChartSection from "../../../components/bar";
+import RecentRecordings from "../../../components/recent-recordings";
+import RecentPlannings from "../../../components/recent-plannings";
 
 
 const cardsData = [

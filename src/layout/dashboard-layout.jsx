@@ -10,7 +10,7 @@ const DashboardLayout = () => {
             {/* NAVBAR  */}
             <Navbar />
             {/* SIDEBAR  */}
-            <main className={`w-full min-h-screen flex`} >
+            <main className={`w-full min-h-screen h-full flex`} >
                 <Sidebar />
                 <div className={`w-full h-full ${isSidebarCollapsed ? "md:pl-24" : "md:pl-64"} py-2 px-4 md:px-8 overflow-auto`}>
                     <Outlet />

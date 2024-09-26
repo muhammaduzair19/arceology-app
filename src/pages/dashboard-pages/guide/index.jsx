@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import BreadCrumb from "../../components/bread-crumb"
+import BreadCrumb from "../../../components/bread-crumb"
 import { ArrowLeft, Search } from "lucide-react"
 import { useState } from "react";
 

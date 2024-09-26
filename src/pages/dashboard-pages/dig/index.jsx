@@ -1,6 +1,6 @@
 import { Pencil } from "lucide-react"
-import BreadCrumb from "../../components/bread-crumb"
-import DigCard from "../../components/dig-card"
+import BreadCrumb from "../../../components/bread-crumb"
+import DigCard from "../../../components/dig-card"
 import { Link } from "react-router-dom"
 
 const digs = [
@@ -62,7 +62,7 @@ const Dig = () => {
                 <BreadCrumb pageName={'Digs'} />
                 <button className="py-2 px-8 md:rounded-md rounded-sm bg-blue-700 text-white flex items-center gap-2" >
                     <Pencil strokeWidth={1} className="w-4 h-4 " />
-                    <Link to={'/menu-item'} >
+                    <Link to={'/app'} >
                         <p className="text-xs md:text-sm" >Item Menu</p>
                     </Link>
                 </button>

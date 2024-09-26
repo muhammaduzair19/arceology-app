@@ -19,7 +19,7 @@ const Navbar = () => {
                 <button className="p-2 transition-colors rounded-full hover:bg-gray-100"
                     onClick={() => setIsMenuItemCollapsed(!isMenuItemCollapsed)}
                 >
-                    {isMenuItemCollapsed ? <Menu className="w-5 h-5" strokeWidth={1} /> : <X className="w-5 h-5 hover:animate-spin transition-all duration-200 ease-in-out delay-300" strokeWidth={1} />}
+                    {isMenuItemCollapsed ? <Menu className="w-5 h-5" strokeWidth={1} /> : <X className="w-5 h-5" strokeWidth={1} />}
                 </button>
             </div>
             <div className="w-full px-5 flex items-center justify-between" >

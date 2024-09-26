@@ -1,5 +1,5 @@
 import { Plus } from 'lucide-react'
-import BreadCrumb from '../../components/bread-crumb'
+import BreadCrumb from '../../../components/bread-crumb'
 import { Link } from 'react-router-dom'
 
 const AddCollection = () => {
@@ -22,10 +22,10 @@ const AddCollection = () => {
                     <p className='text-sm text-gray-600 text-center' >
                         Organize all your items in stock by creating and adding them to recordings. These collections helps to find items faster for your dig.
                     </p>
-                    <button className=' text-white flex items-center gap-2 px-4 py-2 bg-blue-600 rounded-md' >
+                    <Link to={'/app'} className=' text-white flex items-center gap-2 px-4 py-2 bg-blue-600 rounded-md' >
                         <Plus />
                         Add Collection
-                    </button>
+                    </Link>
                     <Link to={'/guide'} className='text-sm text-blue-700 hover:underline' >
                     Read more
                     </Link>

@@ -1,24 +1,34 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Register from './pages/register'
-import SignIn from './pages/sign-in'
-import ResetPassword from './pages/reset-password'
-import ConfirmEmail from './pages/confirm-email'
-import Confirmation from './pages/confirmation'
-import Dashboard from './pages/Dashboard'
+
+// auth pages import
+import Register from './pages/auth-pages/register'
+import SignIn from './pages/auth-pages/sign-in'
+import ResetPassword from './pages/auth-pages/reset-password'
+import ConfirmEmail from './pages/auth-pages/confirm-email'
+import Confirmation from './pages/auth-pages/confirmation'
+
+//dashboard pages import
+import Dashboard from './pages/dashboard-pages/dashboard'
+import AddCollection from './pages/dashboard-pages/add-collection'
+import Guide from './pages/dashboard-pages/guide'
+import Dig from './pages/dashboard-pages/dig'
+
+//layouts import
 import DashboardLayout from './layout/dashboard-layout'
 import AppLayout from './layout/app-layout'
-import AddCollection from './pages/add-collection'
-import MenuItem from './pages/menu-item'
-import Guide from './pages/guide'
-import Dig from './pages/dig'
-import Points from './pages/points'
-import Features from './pages/features'
-import Relations from './pages/relations'
+
+//app pages import 
+import MenuItem from './pages/app-pages/app'
+import Points from './pages/app-pages/points'
+import Features from './pages/app-pages/features'
+import Relations from './pages/app-pages/relations'
+import NotFound from './pages/not-found'
 
 const App = () => {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path='/*' element={<NotFound />} />
         <Route path='/register' element={<Register />} />
         <Route path='/register' element={<Register />} />
         <Route path='/signin' element={<SignIn />} />
@@ -31,8 +41,8 @@ const App = () => {
           <Route path='/guide' element={<Guide />} />
           <Route path='/dig' element={<Dig />} />
         </Route>
-        <Route path='/' element={<AppLayout />} >
-          <Route path='/menu-item' element={<MenuItem />} />
+        <Route path='/' element={<AppLayout />}>
+          <Route path='/app' element={<MenuItem />} />
           <Route path='/points' element={<Points />} />
           <Route path='/features' element={<Features />} />
           <Route path='/relations' element={<Relations />} />

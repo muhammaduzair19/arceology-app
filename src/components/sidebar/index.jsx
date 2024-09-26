@@ -1,44 +1,29 @@
-import { Link } from "react-router-dom";
 import { useAppContext } from "../../context/app-context"
-import { Award, ChartColumnStacked, CircleHelp, Folder, Home, List, MessageSquareMore, Settings, Star, Tag, UserRound, Users } from "lucide-react";
-
-const SidebarLink = ({ to, icon: Icon, label, isCollapsed, }) => {
-    const { setIsSidebarCollapsed } = useAppContext();
-    // const pathname = usePathname();
-    // const isActive = pathname === href || (pathname === '/' && href === '/dashboard');
-    const isActive = false;
-
-    return (
-        <Link
-            onClick={() => setIsSidebarCollapsed(true)}
-            to={to}
-
-        >
-            <div
-                className={`cursor-pointer flex items-center  transition-all ease-in  duration-300
-                    ${isCollapsed ? 'justify-center py-2' : 'justify-start px-8 py-2'}
-                     hover:text-blue-500 hover:bg-blue-100 gap-3 transition-colors 
-                     ${isActive ? 'bg-blue-200 text-white' : ''}`}
-            >
-
-                <Icon className="w-5 h-5 !text-gray-700" strokeWidth={1} />
-                <span className={`${isCollapsed ? 'hidden' : 'block'} font-medium text-xs text-gray-700`} >
-                    {label}
-                </span>
-
-            </div>
-        </Link>
-    )
-}
+import { Award, ChartColumnStacked, CircleHelp, CirclePlus, Folder, Home, List, MessageSquareMore, Settings, Shovel, Star, Tag, UserRound, Users } from "lucide-react";
+import TagItem from "./tag";
+import SidebarLink from "./link";
 
 
 
 const MenuLinks = [
+   
     {
         id: 0,
         to: '/',
         icon: Home,
         label: 'Dashboard',
+    },
+    {
+        id: 8,
+        to: '/dig',
+        icon: Shovel,
+        label: 'Digs'
+    },
+    {
+        id: 9,
+        to: '/add-collection',
+        icon: CirclePlus,
+        label: 'Add Collection'
     },
     {
         id: 1,
@@ -85,15 +70,6 @@ const MenuLinks = [
 ]
 
 
-const TagItem = ({ label }) => {
-    const { isMenuItemCollapsed } = useAppContext();
-    return (
-        <div className={`my-3 ${isMenuItemCollapsed ? 'py-2 text-center hidden md:block' : 'px-8 py-2 '}`} >
-            <p className="text-xs text-gray-600 font-semibold opacity-70 truncate" >{label}</p>
-        </div>
-    )
-}
-
 
 
 const Sidebar = () => {
@@ -101,7 +77,7 @@ const Sidebar = () => {
 
     const { isSidebarCollapsed } = useAppContext();
     return (
-        <div className={`${isSidebarCollapsed ? 'w-0 md:w-20' : 'w-60'} fixed  bg-white top-12 z-10 h-full shadow-md transition-all ease-in  duration-300`} >
+        <div className={`${isSidebarCollapsed ? 'w-0 md:w-20' : 'w-60'} fixed overflow-auto  bg-white top-12 z-10 min-h-full shadow-md transition-all ease-in-out  duration-300`} >
             <div className="flex-grow">
                 <div>
                     <TagItem label={'Menu'} />
