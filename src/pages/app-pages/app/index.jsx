@@ -4,6 +4,7 @@ import { Search, Shovel } from "lucide-react";
 import MenuLink from "./link";
 import TagItem from "./tag";
 import { useEffect, useRef, useState } from "react";
+import ZoomRange from "../../../components/zoom-range";
 
 const MenuLinks = [
     {
@@ -44,10 +45,15 @@ const MenuLinks = [
 ];
 
 const MenuItem = () => {
+    const [dimension, setDimension] = useState({
+        width: 0,
+        height: 0,
+    });
     const {
         isMenuItemCollapsed,
         isPanning,
         stageRef,
+        handleClick,
         handleMouseDown,
         handleMouseMove,
         handleMouseUp,
@@ -57,33 +63,31 @@ const MenuItem = () => {
         isAddSectionOpen,
         setIsAddSectionOpen,
         lines,
+        zoom,
     } = useAppContext();
 
     const [name, setName] = useState("");
     const [image, setImage] = useState(null);
     const [sections, setSections] = useState({});
-    const [konvaImage, setKonvaImage] = useState(null); // To store HTMLImageElement for each section
+    const [konvaImage, setKonvaImage] = useState(null);
 
     const fileInputRef = useRef(null);
 
-    // Open the modal when the "New Section" button is clicked
     const handleNewSectionClick = () => {
         setIsAddSectionOpen(true);
     };
 
-    // Handle file selection and convert it into a canvas image
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
             const reader = new FileReader();
             reader.onload = () => {
-                setImage(reader.result); // Base64 string
+                setImage(reader.result);
             };
             reader.readAsDataURL(file);
         }
     };
 
-    // Handle saving the new section to localStorage and displaying it
     const handleSaveSection = () => {
         const newSection = { name, image };
         setSections(newSection);
@@ -94,6 +98,10 @@ const MenuItem = () => {
         img.src = newSection.image;
 
         img.onload = () => {
+            const aspectRatio = img.naturalWidth / img.naturalHeight;
+            const newWidth = 500;
+            const newHeight = newWidth / aspectRatio;
+            setDimension({ width: newWidth, height: newHeight });
             setKonvaImage(img);
         };
 
@@ -102,7 +110,6 @@ const MenuItem = () => {
         setImage(null);
     };
 
-    // Load stored sections from localStorage on component mount
     useEffect(() => {
         const storedSections = JSON.parse(localStorage.getItem("sections")) || {};
         setSections(storedSections);
@@ -110,6 +117,10 @@ const MenuItem = () => {
         const img = new window.Image();
         img.src = storedSections.image;
         img.onload = () => {
+            const aspectRatio = img.naturalWidth / img.naturalHeight;
+            const newWidth = 500;
+            const newHeight = newWidth / aspectRatio;
+            setDimension({ width: newWidth, height: newHeight });
             setKonvaImage(img);
         };
     }, []);
@@ -197,13 +208,16 @@ const MenuItem = () => {
             </div>
 
             <div className={`w-full h-full ${isMenuItemCollapsed ? "md:pl-24" : "md:pl-64"} py-2 px-4 md:px-8 fixed`}>
+                {konvaImage && <ZoomRange />}
                 <div className="w-full h-full flex">
                     <Stage
                         ref={stageRef}
                         width={window.innerWidth}
                         height={window.innerHeight}
+                        onClick={handleClick}
                         onMouseDown={handleMouseDown}
                         onMouseMove={handleMouseMove}
+                        onTap={handleClick}
                         onMouseUp={handleMouseUp}
                         onTouchStart={handleTouchStart}
                         onTouchMove={handleTouchMove}
@@ -214,34 +228,21 @@ const MenuItem = () => {
                         <Layer>
                             {konvaImage && (
                                 <Image
+                                    x={(window.innerWidth - dimension.width * zoom) / 2}
+                                    y={(window.innerHeight - dimension.height * zoom) / 2}
                                     image={konvaImage}
-                                    x={150}
-                                    y={50}
-                                    width={window.innerWidth}
-                                    height={window.innerHeight}
+                                    width={dimension.width * zoom}
+                                    height={dimension.height * zoom}
                                 />
                             )}
 
                             {lines.map((line, i) => (
-                                <Line
-                                    
-                                    key={i}
-                                    {...line}
-                                    stroke="#1F04EB"
-                                    fill={'#1F04EB'}
-                                    strokeWidth={5}
-                                    tension={0.5}
-                                    lineCap="round"
-                                    lineJoin="round"
-                                    onDblClick={() => console.log('sd')
-                                    }
-                                />
+                                <Line key={i} {...line} />
                             ))}
                         </Layer>
                     </Stage>
                 </div>
             </div>
-           
         </>
     );
 };

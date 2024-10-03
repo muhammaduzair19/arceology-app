@@ -1,4 +1,5 @@
 import { createContext, useContext, useRef, useState } from "react";
+import DrawPolyline from "../utils/DrawPolyline";
 
 const AppContext = createContext();
 
@@ -12,10 +13,27 @@ const AppContextProvider = ({ children }) => {
     const stageRef = useRef(null);
     const [lastPos, setLastPos] = useState({ x: 0, y: 0 });
     const isDrawing = useRef(false);
-    const [history, setHistory] = useState([]); // Store drawing history
-    const [redoStack, setRedoStack] = useState([]); // Store redo history
+    const [history, setHistory] = useState([]);
+    const [redoStack, setRedoStack] = useState([]);
+    const [zoom, setZoom] = useState(1);
 
     // BIG SCREENS
+    const handleClick = () => {
+        const stage = stageRef.current;
+        if (isPencilSelect) {
+            if (isDrawing.current) {
+                const polylines = Array.from(lines);
+                const lastPolylines = polylines[polylines.length - 1];
+                const newLine = DrawPolyline(stage, lastPolylines, true, isDrawing);
+                polylines.splice(polylines.length, 1, newLine);
+                setLines([...lines, newLine]);
+            } else {
+                isDrawing.current = true;
+                const newLine = DrawPolyline(stage);
+                setLines([...lines, newLine]);
+            }
+        }
+    };
     const handleMouseDown = () => {
         const stage = stageRef.current;
         if (!isAddSectionOpen && !isPencilSelect) {
@@ -23,17 +41,11 @@ const AppContextProvider = ({ children }) => {
             const pos = stage.getPointerPosition();
             setLastPos({ x: pos.x, y: pos.y });
         }
-        if (isPencilSelect) {
-            isDrawing.current = true;
-            const pos = stage.getPointerPosition();
-            setLines([...lines, { points: [pos.x + -1 * stage.x(), pos.y + -1 * stage.y()] }]);
-        }
     };
-
     const handleMouseMove = () => {
+        const stage = stageRef.current;
         if (!isAddSectionOpen && !isPencilSelect) {
             if (!isPanning) return;
-            const stage = stageRef.current;
             const pos = stage.getPointerPosition();
             const dx = pos.x - lastPos.x;
             const dy = pos.y - lastPos.y;
@@ -50,26 +62,18 @@ const AppContextProvider = ({ children }) => {
             if (!isDrawing.current) {
                 return;
             }
-            const stage = stageRef.current;
-            const point = stage.getPointerPosition();
 
-            let lastLine = lines[lines.length - 1];
+            const polylines = Array.from(lines);
+            const lastPolylines = polylines[polylines.length - 1];
+            const newLine = DrawPolyline(stage, lastPolylines);
+            polylines.splice(polylines.length - 1, 1, newLine);
 
-            // add point
-            lastLine.points = lastLine.points.concat([point.x + -1 * stage.x(), point.y + -1 * stage.y()]);
-
-            // replace last
-            lines.splice(lines.length - 1, 1, lastLine);
-            setLines(lines.concat());
+            setLines(polylines);
         }
     };
-
     const handleMouseUp = () => {
         if (!isAddSectionOpen && !isPencilSelect) {
             setIsPanning(false);
-        }
-        if (isPencilSelect) {
-            isDrawing.current = false;
         }
     };
 
@@ -81,19 +85,11 @@ const AppContextProvider = ({ children }) => {
             const pos = stage.getPointerPosition();
             setLastPos({ x: pos.x, y: pos.y });
         }
-        if (isPencilSelect) {
-            console.log(isPencilSelect, '<= touch start');
-            
-            isDrawing.current = true;
-            const pos = stage.getPointerPosition();
-            setLines([...lines, { points: [pos.x + -1 * stage.x(), pos.y + -1 * stage.y()] }]);
-        }
     };
-
     const handleTouchMove = () => {
+        const stage = stageRef.current;
         if (!isAddSectionOpen && !isPencilSelect) {
             if (!isPanning) return;
-            const stage = stageRef.current;
             const pos = stage.getPointerPosition();
             const dx = pos.x - lastPos.x;
             const dy = pos.y - lastPos.y;
@@ -109,76 +105,67 @@ const AppContextProvider = ({ children }) => {
             if (!isDrawing.current) {
                 return;
             }
-            const stage = stageRef.current;
-            const point = stage.getPointerPosition();
 
-            let lastLine = lines[lines.length - 1];
+            const polylines = Array.from(lines);
+            const lastPolylines = polylines[polylines.length - 1];
+            const newLine = DrawPolyline(stage, lastPolylines);
+            polylines.splice(polylines.length - 1, 1, newLine);
 
-            // add point
-            lastLine.points = lastLine.points.concat([point.x + -1 * stage.x(), point.y + -1 * stage.y()]);
-
-            // replace last
-            lines.splice(lines.length - 1, 1, lastLine);
-            setLines(lines.concat());
+            setLines(polylines);
         }
     };
-
     const handleTouchEnd = () => {
         if (!isAddSectionOpen && !isPencilSelect) {
             setIsPanning(false);
         }
-        if (isPencilSelect) {
-            isDrawing.current = false;
-        }
     };
-
-    // Undo the last line
     const handleUndo = () => {
-        if (lines.length === 0) return; // No lines to undo
+        if (lines.length === 0) return;
         const newLines = [...lines];
-        const removedLine = newLines.pop(); // Remove the last line
-        setRedoStack([...redoStack, removedLine]); // Add the removed line to the redo stack
-        setHistory([...history, lines]); // Update history
-        setLines(newLines); // Update lines state
+        const removedLine = newLines.pop();
+        setRedoStack([...redoStack, removedLine]);
+        setHistory([...history, lines]);
+        setLines(newLines);
     };
-
-    // Redo the last undone line
     const handleRedo = () => {
-        if (redoStack.length === 0) return; // No lines to redo
+        if (redoStack.length === 0) return;
         const newRedoStack = [...redoStack];
-        const restoredLine = newRedoStack.pop(); // Restore the last undone line
-        setLines([...lines, restoredLine]); // Update lines state
-        setRedoStack(newRedoStack); // Update redo stack
+        const restoredLine = newRedoStack.pop();
+        setLines([...lines, restoredLine]);
+        setRedoStack(newRedoStack);
     };
 
     return (
         <AppContext.Provider
             value={{
                 isSidebarCollapsed,
-                setIsSidebarCollapsed,
                 isMenuItemCollapsed,
-                setIsMenuItemCollapsed,
                 isPanning,
-                setIsPanning,
                 stageRef,
+                isPencilSelect,
+                isAddSectionOpen,
+                lines,
+                history,
+                redoStack,
+                zoom,
+                setIsSidebarCollapsed,
+                setIsMenuItemCollapsed,
+                setIsPanning,
                 handleMouseDown,
                 handleMouseMove,
                 handleMouseUp,
                 handleTouchStart,
                 handleTouchMove,
                 handleTouchEnd,
-                isPencilSelect,
                 setIsPencilSelect,
-                isAddSectionOpen,
                 setIsAddSectionOpen,
-                lines,
                 setLines,
                 handleUndo,
                 handleRedo,
-                history,
                 setHistory,
-                redoStack,
                 setRedoStack,
+                setZoom,
+                handleClick,
             }}
         >
             {children}
