@@ -3,6 +3,7 @@ import DrawPolyline from "../utils/DrawPolyline";
 
 const AppContext = createContext();
 
+// eslint-disable-next-line react/prop-types
 const AppContextProvider = ({ children }) => {
     const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
     const [isMenuItemCollapsed, setIsMenuItemCollapsed] = useState(true);

@@ -45,6 +45,7 @@ const MenuLinks = [
 ];
 
 const MenuItem = () => {
+    const {setLines} = useAppContext()
     const [dimension, setDimension] = useState({
         width: 0,
         height: 0,
@@ -108,6 +109,7 @@ const MenuItem = () => {
         setIsAddSectionOpen(false);
         setName("");
         setImage(null);
+        setLines([]);
     };
 
     useEffect(() => {
