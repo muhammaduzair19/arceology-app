@@ -10,7 +10,16 @@ const AppContextProvider = ({ children }) => {
     const [isPanning, setIsPanning] = useState(false);
     const [isPencilSelect, setIsPencilSelect] = useState(false);
     const [isAddSectionOpen, setIsAddSectionOpen] = useState(false);
-    const [lines, setLines] = useState([]);
+    const [lines, setLines] = useState(() => {
+        try {
+            const storedLines = localStorage.getItem("lines");
+            return storedLines ? JSON.parse(storedLines) : [];
+        } catch (error) {
+            console.error("Error parsing localStorage data:", error);
+            return [];
+        }
+    });
+
     const stageRef = useRef(null);
     const [lastPos, setLastPos] = useState({ x: 0, y: 0 });
     const isDrawing = useRef(false);
@@ -25,13 +34,26 @@ const AppContextProvider = ({ children }) => {
             if (isDrawing.current) {
                 const polylines = Array.from(lines);
                 const lastPolylines = polylines[polylines.length - 1];
-                const newLine = DrawPolyline(stage, lastPolylines, true, isDrawing);
+                const newLine = DrawPolyline(
+                    stage,
+                    lastPolylines,
+                    true,
+                    isDrawing
+                );
                 polylines.splice(polylines.length, 1, newLine);
                 setLines([...lines, newLine]);
+                localStorage.setItem(
+                    "lines",
+                    JSON.stringify([...lines, newLine])
+                );
             } else {
                 isDrawing.current = true;
                 const newLine = DrawPolyline(stage);
                 setLines([...lines, newLine]);
+                localStorage.setItem(
+                    "lines",
+                    JSON.stringify([...lines, newLine])
+                );
             }
         }
     };
@@ -70,6 +92,7 @@ const AppContextProvider = ({ children }) => {
             polylines.splice(polylines.length - 1, 1, newLine);
 
             setLines(polylines);
+            localStorage.setItem("lines", JSON.stringify(polylines));
         }
     };
     const handleMouseUp = () => {

@@ -5,6 +5,7 @@ import MenuLink from "./link";
 import TagItem from "./tag";
 import { useEffect, useRef, useState } from "react";
 import ZoomRange from "../../../components/zoom-range";
+import { useNavigate } from "react-router-dom";
 
 const MenuLinks = [
     {
@@ -45,11 +46,11 @@ const MenuLinks = [
 ];
 
 const MenuItem = () => {
-    const {setLines} = useAppContext()
     const [dimension, setDimension] = useState({
         width: 0,
         height: 0,
     });
+    const navigate = useNavigate();
     const {
         isMenuItemCollapsed,
         isPanning,
@@ -65,6 +66,7 @@ const MenuItem = () => {
         setIsAddSectionOpen,
         lines,
         zoom,
+        setLines,
     } = useAppContext();
 
     const [name, setName] = useState("");
@@ -76,6 +78,11 @@ const MenuItem = () => {
 
     const handleNewSectionClick = () => {
         setIsAddSectionOpen(true);
+    };
+
+    const toPoints = (points) => {
+        localStorage.setItem("points", JSON.stringify(points));
+        navigate("/points");
     };
 
     const handleImageChange = (e) => {
@@ -94,6 +101,7 @@ const MenuItem = () => {
         setSections(newSection);
 
         localStorage.setItem("sections", JSON.stringify(newSection));
+        localStorage.removeItem("lines");
 
         const img = new window.Image();
         img.src = newSection.image;
@@ -113,7 +121,8 @@ const MenuItem = () => {
     };
 
     useEffect(() => {
-        const storedSections = JSON.parse(localStorage.getItem("sections")) || {};
+        const storedSections =
+            JSON.parse(localStorage.getItem("sections")) || {};
         setSections(storedSections);
 
         const img = new window.Image();
@@ -146,7 +155,11 @@ const MenuItem = () => {
                         className="bg-transparent focus:outline-none text-xs w-full"
                     />
                 </div>
-                <div className={`flex-grow ${isMenuItemCollapsed ? "hidden md:block" : "block"}`}>
+                <div
+                    className={`flex-grow ${
+                        isMenuItemCollapsed ? "hidden md:block" : "block"
+                    }`}
+                >
                     <div>
                         <TagItem label={"Sections"} />
                         {MenuLinks?.map((menu) => (
@@ -162,20 +175,40 @@ const MenuItem = () => {
 
                     <div>
                         <TagItem label={"Features"} />
-                        <MenuLink to={"/features"} id={0} label={"Features Base"} isCollapsed={isMenuItemCollapsed} />
+                        <MenuLink
+                            to={"/features"}
+                            id={0}
+                            label={"Features Base"}
+                            isCollapsed={isMenuItemCollapsed}
+                        />
                     </div>
                     <div>
                         <TagItem label={"Context"} />
-                        <MenuLink to={"/relations"} id={0} label={"Context 1"} isCollapsed={isMenuItemCollapsed} />
+                        <MenuLink
+                            to={"/relations"}
+                            id={0}
+                            label={"Context 1"}
+                            isCollapsed={isMenuItemCollapsed}
+                        />
                     </div>
 
-                    <div className={`w-full px-4 ${isMenuItemCollapsed ? "py-5" : "py-2"}`}>
+                    <div
+                        className={`w-full px-4 ${
+                            isMenuItemCollapsed ? "py-5" : "py-2"
+                        }`}
+                    >
                         <button
                             onClick={handleNewSectionClick}
                             className="w-full flex text-xs items-center gap-2 text-gray-800 bg-gray-200  justify-center p-2 rounded-md"
                         >
                             <Shovel className="w-4 h-4" strokeWidth={1} />
-                            <p className={`${isMenuItemCollapsed ? "hidden" : " block"}`}>New Section</p>
+                            <p
+                                className={`${
+                                    isMenuItemCollapsed ? "hidden" : " block"
+                                }`}
+                            >
+                                New Section
+                            </p>
                         </button>
                     </div>
                 </div>
@@ -188,7 +221,9 @@ const MenuItem = () => {
                             className="bg-white p-5 rounded-md shadow-lg"
                             onClick={(e) => e.stopPropagation()} // Prevent modal content clicks from closing modal
                         >
-                            <h2 className="text-lg font-bold mb-4">Add New Section</h2>
+                            <h2 className="text-lg font-bold mb-4">
+                                Add New Section
+                            </h2>
                             <input
                                 type="text"
                                 placeholder="Enter name"
@@ -196,8 +231,20 @@ const MenuItem = () => {
                                 onChange={(e) => setName(e.target.value)}
                                 className="border p-2 w-full mb-4"
                             />
-                            <input type="file" ref={fileInputRef} onChange={handleImageChange} className="mb-4" />
-                            {image && <img src={image} alt="preview" className="mb-4" width={100} />}
+                            <input
+                                type="file"
+                                ref={fileInputRef}
+                                onChange={handleImageChange}
+                                className="mb-4"
+                            />
+                            {image && (
+                                <img
+                                    src={image}
+                                    alt="preview"
+                                    className="mb-4"
+                                    width={100}
+                                />
+                            )}
                             <button
                                 onClick={handleSaveSection}
                                 className="bg-blue-500 text-white p-2 rounded-md w-full"
@@ -209,7 +256,11 @@ const MenuItem = () => {
                 )}
             </div>
 
-            <div className={`w-full h-full ${isMenuItemCollapsed ? "md:pl-24" : "md:pl-64"} py-2 px-4 md:px-8 fixed`}>
+            <div
+                className={`w-full h-full ${
+                    isMenuItemCollapsed ? "md:pl-24" : "md:pl-64"
+                } py-2 px-4 md:px-8 fixed`}
+            >
                 {konvaImage && <ZoomRange />}
                 <div className="w-full h-full flex">
                     <Stage
@@ -225,13 +276,26 @@ const MenuItem = () => {
                         onTouchMove={handleTouchMove}
                         onTouchEnd={handleTouchEnd}
                         draggable={false}
-                        style={{ cursor: isPanning && !isAddSectionOpen ? "grabbing" : "default" }}
+                        style={{
+                            cursor:
+                                isPanning && !isAddSectionOpen
+                                    ? "grabbing"
+                                    : "default",
+                        }}
                     >
                         <Layer>
                             {konvaImage && (
                                 <Image
-                                    x={(window.innerWidth - dimension.width * zoom) / 2}
-                                    y={(window.innerHeight - dimension.height * zoom) / 2}
+                                    x={
+                                        (window.innerWidth -
+                                            dimension.width * zoom) /
+                                        2
+                                    }
+                                    y={
+                                        (window.innerHeight -
+                                            dimension.height * zoom) /
+                                        2
+                                    }
                                     image={konvaImage}
                                     width={dimension.width * zoom}
                                     height={dimension.height * zoom}
@@ -239,7 +303,12 @@ const MenuItem = () => {
                             )}
 
                             {lines.map((line, i) => (
-                                <Line key={i} {...line} />
+                                <Line
+                                    key={i}
+                                    {...line}
+                                    onDblClick={(e) => toPoints(e.target.attrs)}
+                                    onDblTap={(e) => toPoints(e.target.attrs)}
+                                />
                             ))}
                         </Layer>
                     </Stage>
