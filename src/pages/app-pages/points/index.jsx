@@ -202,6 +202,7 @@ const Points = () => {
                                     height={dimension.height * zoom}
                                 />
                             )}
+                            
 
                             <Line {...points} />
                         </Layer>

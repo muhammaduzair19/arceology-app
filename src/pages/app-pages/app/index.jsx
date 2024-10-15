@@ -1,9 +1,9 @@
 import { useAppContext } from "../../../context/app-context";
-import { Image, Layer, Line, Stage } from "react-konva";
+import { Circle, Image, Layer, Line, Stage, Text } from "react-konva";
 import { Search, Shovel } from "lucide-react";
 import MenuLink from "./link";
 import TagItem from "./tag";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ZoomRange from "../../../components/zoom-range";
 import { useNavigate } from "react-router-dom";
 
@@ -75,6 +75,7 @@ const MenuItem = () => {
     const [konvaImage, setKonvaImage] = useState(null);
 
     const fileInputRef = useRef(null);
+    let closedShapeCount = 0;
 
     const handleNewSectionClick = () => {
         setIsAddSectionOpen(true);
@@ -302,14 +303,55 @@ const MenuItem = () => {
                                 />
                             )}
 
-                            {lines.map((line, i) => (
-                                <Line
-                                    key={i}
-                                    {...line}
-                                    onDblClick={(e) => toPoints(e.target.attrs)}
-                                    onDblTap={(e) => toPoints(e.target.attrs)}
-                                />
-                            ))}
+                            {lines.map((line, i) => {
+                                const points = line.points;
+                                let sumX = 0;
+                                let sumY = 0;
+                                const numPoints = points.length / 2;
+
+                                for (let j = 0; j < points.length; j += 2) {
+                                    // x  and y
+                                    sumX += points[j];
+                                    sumY += points[j + 1];
+                                }
+                                const midX = sumX / numPoints;
+                                const midY = sumY / numPoints;
+
+                                const fontSize = 26;
+                                const textWidth = fontSize * 2;
+                                const textHeight = fontSize;
+
+                                const isClosed = line.closed || false;
+
+                                let displayText = isClosed
+                                    ? (++closedShapeCount).toString()
+                                    : `${i + 1}`;
+
+                                return (
+                                    <React.Fragment key={i}>
+                                        <Line
+                                            {...line}
+                                            onDblClick={(e) =>
+                                                toPoints(e.target.attrs)
+                                            }
+                                            onDblTap={(e) =>
+                                                toPoints(e.target.attrs)
+                                            }
+                                        />
+
+                                        <Text
+                                            fontSize={fontSize}
+                                            text={isClosed ? displayText : ""}
+                                            fill="white"
+                                            fontStyle="bold"
+                                            x={midX - textWidth / 5}
+                                            y={midY - textHeight / 6}
+                                            align="center"
+                                            verticalAlign="middle"
+                                        />
+                                    </React.Fragment>
+                                );
+                            })}
                         </Layer>
                     </Stage>
                 </div>
