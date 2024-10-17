@@ -55,12 +55,31 @@ const Points = () => {
         width: 0,
         height: 0,
     });
-    const [points, setPoints] = useState(() => {
+    const [line, setLine] = useState(() => {
         try {
-            const storedPoints = localStorage.getItem("points");
-            return storedPoints ? JSON.parse(storedPoints) : {};
+            const storedLine = localStorage.getItem("singleLine");
+            return storedLine ? JSON.parse(storedLine) : {};
         } catch (error) {
             console.log(error);
+        }
+    });
+
+    const [points, setPoints] = useState(() => {
+        try {
+            const storedPoints = localStorage.getItem("singleLine");
+            if (storedPoints) {
+                const parsedPoints = JSON.parse(storedPoints).points;
+                const halfPoints = parsedPoints.slice(
+                    0,
+                    Math.floor(parsedPoints.length / 2)
+                );
+                return halfPoints;
+            } else {
+                return [];
+            }
+        } catch (error) {
+            console.error("Error parsing stored points:", error);
+            return [];
         }
     });
 
@@ -132,13 +151,17 @@ const Points = () => {
                 <div className="flex-grow flex flex-col gap-8">
                     <div>
                         <TagItem label={"Sections"} />
-                        {points["points"]?.map((point, index) => (
-                            <PointLink
-                                key={index}
-                                label={`Point ${index + 1}`}
-                                isCollapsed={isMenuItemCollapsed}
-                            />
-                        ))}
+                        {points.length > 0 ? (
+                            points.map((point, index) => (
+                                <PointLink
+                                    key={index}
+                                    label={`Point ${index + 1}`}
+                                    isCollapsed={isMenuItemCollapsed}
+                                />
+                            ))
+                        ) : (
+                            <p className="text-sm ml-8 " >No Points Found</p>
+                        )}
                     </div>
                     <div
                         className={`w-full px-4 ${
@@ -202,9 +225,44 @@ const Points = () => {
                                     height={dimension.height * zoom}
                                 />
                             )}
-                            
 
-                            <Line {...points} />
+                            {line?.points?.map(() => {
+                                const vector2d = [];
+                                for (
+                                    let i = 0;
+                                    i < line.points.length;
+                                    i = i + 2
+                                ) {
+                                    const x = line.points[i];
+                                    const y = line.points[i + 1];
+                                    vector2d.push({ x, y });
+                                }
+                                const circles = vector2d.map((vec, index) => (
+                                    <React.Fragment key={index}>
+                                        <Circle
+                                            x={vec.x}
+                                            y={vec.y}
+                                            radius={10}
+                                            fill={"skyblue"}
+                                            stroke="black"
+                                            strokeWidth={1}
+                                        />
+                                        <Text
+                                            fontSize={14}
+                                            text={index}
+                                            fill={"black"}
+                                            x={vec.x - 14 / 4}
+                                            y={vec.y - 14 / 2}
+                                        />
+                                    </React.Fragment>
+                                ));
+                                return (
+                                    <>
+                                        <Line {...line} fill={"transparent"} />
+                                        {circles}
+                                    </>
+                                );
+                            })}
                         </Layer>
                     </Stage>
                 </div>

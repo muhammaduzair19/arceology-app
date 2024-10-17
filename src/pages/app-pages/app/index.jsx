@@ -81,8 +81,8 @@ const MenuItem = () => {
         setIsAddSectionOpen(true);
     };
 
-    const toPoints = (points) => {
-        localStorage.setItem("points", JSON.stringify(points));
+    const saveSingleShape = (singleLine) => {
+        localStorage.setItem("singleLine", JSON.stringify(singleLine));
         navigate("/points");
     };
 
@@ -332,10 +332,10 @@ const MenuItem = () => {
                                         <Line
                                             {...line}
                                             onDblClick={(e) =>
-                                                toPoints(e.target.attrs)
+                                                saveSingleShape(e.target.attrs)
                                             }
                                             onDblTap={(e) =>
-                                                toPoints(e.target.attrs)
+                                                saveSingleShape(e.target.attrs)
                                             }
                                         />
 

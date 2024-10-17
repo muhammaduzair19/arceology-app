@@ -5,8 +5,8 @@ const AppContext = createContext();
 
 // eslint-disable-next-line react/prop-types
 const AppContextProvider = ({ children }) => {
-    const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
-    const [isMenuItemCollapsed, setIsMenuItemCollapsed] = useState(true);
+    const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+    const [isMenuItemCollapsed, setIsMenuItemCollapsed] = useState(false);
     const [isPanning, setIsPanning] = useState(false);
     const [isPencilSelect, setIsPencilSelect] = useState(false);
     const [isAddSectionOpen, setIsAddSectionOpen] = useState(false);
