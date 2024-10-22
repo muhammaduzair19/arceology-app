@@ -124,7 +124,7 @@ const Points = () => {
             <div
                 className={`${
                     isMenuItemCollapsed ? "w-0 md:w-20" : "w-60"
-                } fixed  bg-indigo-50 top-12 z-10 h-full shadow-md transition-all ease-in  duration-300 overflow-auto `}
+                } fixed  bg-blue-50 top-12 z-10 h-full shadow-md transition-all ease-in  duration-300 overflow-auto `}
             >
                 <Link
                     to={"/app"}

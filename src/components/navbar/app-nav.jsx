@@ -1,6 +1,16 @@
-import { Bell, ChevronDown, Menu, Pencil, Redo2, Settings, Tag, Undo2, X } from "lucide-react";
+import {
+    Bell,
+    ChevronDown,
+    Menu,
+    Pencil,
+    Redo2,
+    Settings,
+    Tag,
+    Undo2,
+    X,
+} from "lucide-react";
 import { useAppContext } from "../../context/app-context";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const Navbar = () => {
     const [dropdownMenu, setDropdownMenu] = useState(false);
@@ -13,6 +23,7 @@ const Navbar = () => {
         lines,
         handleUndo,
         redoStack,
+        trench
     } = useAppContext();
 
     const handlePencil = () => {
@@ -20,7 +31,6 @@ const Navbar = () => {
         setDropdownMenu(false);
     };
 
-    
 
     return (
         <div className="w-full h-12 bg-white shadow-md flex sticky top-0 z-20">
@@ -28,7 +38,9 @@ const Navbar = () => {
                 {/* LOGO  */}
                 <div className="flex items-center gap-2">
                     <span className="w-6 h-6 bg-gray-500 rounded-full " />
-                    <h1 className="text-xl font-bold font-serif">Archeolog</h1>
+                    <h1 className="text-xl font-bold font-serif">
+                        {trench ? trench : '' }
+                    </h1>
                 </div>
                 <button
                     className="p-2 transition-colors rounded-full hover:bg-gray-100"
@@ -43,7 +55,9 @@ const Navbar = () => {
             </div>
             <div className="w-full px-5 flex items-center justify-between">
                 <div className="px-2">
-                    <h1 className="hidden md:text-lg font-bold truncat">La-Cella-Salou-Tarragona</h1>
+                    <h1 className="hidden md:text-lg font-bold truncat">
+                        La-Cella-Salou-Tarragona
+                    </h1>
                 </div>
 
                 <div className="flex items-center gap-2">
@@ -52,7 +66,9 @@ const Navbar = () => {
                             <button
                                 disabled={lines.length == 0 ? true : false}
                                 className={`py-1 rounded-md px-2 md:px-4 ${
-                                    lines.length === 0 ? "bg-gray-400 cursor-no-drop" : "bg-gray-300"
+                                    lines.length === 0
+                                        ? "bg-gray-400 cursor-no-drop"
+                                        : "bg-gray-300"
                                 } `}
                                 onClick={handleUndo}
                             >
@@ -61,7 +77,9 @@ const Navbar = () => {
                             <button
                                 disabled={redoStack.length === 0 ? true : false}
                                 className={`py-1 rounded-md px-2 md:px-4 ${
-                                    redoStack.length === 0 ? "bg-gray-400 cursor-no-drop" : "bg-gray-300"
+                                    redoStack.length === 0
+                                        ? "bg-gray-400 cursor-no-drop"
+                                        : "bg-gray-300"
                                 }`}
                                 onClick={handleRedo}
                             >

@@ -77,7 +77,7 @@ const Sidebar = () => {
 
     const { isSidebarCollapsed } = useAppContext();
     return (
-        <div className={`${isSidebarCollapsed ? 'w-0 md:w-20' : 'w-60'} fixed overflow-auto  bg-white top-12 z-10 min-h-full shadow-md transition-all ease-in-out  duration-300`} >
+        <div className={`${isSidebarCollapsed ? 'w-0 md:w-20' : 'w-60'} fixed overflow-auto  bg-blue-50 top-12 z-10 min-h-full shadow-md transition-all ease-in-out  duration-300`} >
             <div className="flex-grow">
                 <div>
                     <TagItem label={'Menu'} />

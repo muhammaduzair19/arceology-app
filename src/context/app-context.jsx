@@ -10,6 +10,8 @@ const AppContextProvider = ({ children }) => {
     const [isPanning, setIsPanning] = useState(false);
     const [isPencilSelect, setIsPencilSelect] = useState(false);
     const [isAddSectionOpen, setIsAddSectionOpen] = useState(false);
+    const [trench, setTrench] = useState("");
+
     const [lines, setLines] = useState(() => {
         try {
             const storedLines = localStorage.getItem("lines");
@@ -172,6 +174,8 @@ const AppContextProvider = ({ children }) => {
                 history,
                 redoStack,
                 zoom,
+                trench,
+                setTrench,
                 setIsSidebarCollapsed,
                 setIsMenuItemCollapsed,
                 setIsPanning,

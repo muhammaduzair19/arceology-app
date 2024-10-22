@@ -43,7 +43,7 @@ const Features = () => {
 
     return (
         <>
-            <div className={`${isMenuItemCollapsed ? 'w-0 md:w-20' : 'w-60'} bg-indigo-50 z-10 shadow-md transition-all ease-in  duration-300 `}>
+            <div className={`${isMenuItemCollapsed ? 'w-0 md:w-20' : 'w-60'} bg-blue-50 z-10 shadow-md transition-all ease-in  duration-300 `}>
                 <Link to={'/app'} className={`text-gray-600/80 text-xs px-3 font-semibold flex gap-1 items-center mt-2 ${isMenuItemCollapsed ? 'hidden md:flex' : 'flex'}`} >
                     <ChevronLeft strokeWidth={1.5} className="w-4 h-4 text-gray-600/80" />
                     Feature

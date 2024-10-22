@@ -25,7 +25,7 @@ const cardsData = [
     {
         id: 3,
         quantity: '48',
-        label: 'Active Explorers',
+        label: 'Active Diggers',
         percentage: '-18.25',
         icon: UserRound
     },

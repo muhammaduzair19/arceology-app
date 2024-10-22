@@ -66,6 +66,7 @@ const MenuItem = () => {
         setIsAddSectionOpen,
         lines,
         zoom,
+        setTrench,
         setLines,
     } = useAppContext();
 
@@ -100,6 +101,7 @@ const MenuItem = () => {
     const handleSaveSection = () => {
         const newSection = { name, image };
         setSections(newSection);
+        setTrench(name);
 
         localStorage.setItem("sections", JSON.stringify(newSection));
         localStorage.removeItem("lines");
@@ -125,6 +127,7 @@ const MenuItem = () => {
         const storedSections =
             JSON.parse(localStorage.getItem("sections")) || {};
         setSections(storedSections);
+        setTrench(storedSections.name);
 
         const img = new window.Image();
         img.src = storedSections.image;
@@ -142,7 +145,7 @@ const MenuItem = () => {
             <div
                 className={`${
                     isMenuItemCollapsed ? "w-0 md:w-20" : "w-60"
-                } bg-indigo-50 z-10 shadow-md transition-all ease-in  duration-300 `}
+                } bg-blue-50 z-10 shadow-md transition-all ease-in  duration-300 `}
             >
                 <div
                     className={`${
