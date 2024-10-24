@@ -98,15 +98,16 @@ const Points = () => {
         handleTouchEnd,
         isAddSectionOpen,
         zoom,
+        currentSection,
+        setCurrentSection,
     } = useAppContext();
 
     const [konvaImage, setKonvaImage] = useState(null);
-    const [sections, setSections] = useState({});
 
     useEffect(() => {
         const storedSections =
-            JSON.parse(localStorage.getItem("sections")) || {};
-        setSections(storedSections);
+            JSON.parse(localStorage.getItem("currentSection")) || {};
+        setCurrentSection(storedSections);
 
         const img = new window.Image();
         img.src = storedSections.image;
@@ -160,7 +161,7 @@ const Points = () => {
                                 />
                             ))
                         ) : (
-                            <p className="text-sm ml-8 " >No Points Found</p>
+                            <p className="text-sm ml-8 ">No Points Found</p>
                         )}
                     </div>
                     <div

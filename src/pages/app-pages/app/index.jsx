@@ -68,11 +68,12 @@ const MenuItem = () => {
         zoom,
         setTrench,
         setLines,
+        setCurrentSection,
+        currentSection,
     } = useAppContext();
 
     const [name, setName] = useState("");
     const [image, setImage] = useState(null);
-    const [sections, setSections] = useState({});
     const [konvaImage, setKonvaImage] = useState(null);
 
     const fileInputRef = useRef(null);
@@ -100,10 +101,10 @@ const MenuItem = () => {
 
     const handleSaveSection = () => {
         const newSection = { name, image };
-        setSections(newSection);
+        setCurrentSection(newSection);
         setTrench(name);
 
-        localStorage.setItem("sections", JSON.stringify(newSection));
+        localStorage.setItem("currentSection", JSON.stringify(newSection));
         localStorage.removeItem("lines");
 
         const img = new window.Image();
@@ -124,13 +125,13 @@ const MenuItem = () => {
     };
 
     useEffect(() => {
-        const storedSections =
-            JSON.parse(localStorage.getItem("sections")) || {};
-        setSections(storedSections);
-        setTrench(storedSections.name);
+        const storedcurrentSection =
+            JSON.parse(localStorage.getItem("currentSection")) || {};
+        setCurrentSection(storedcurrentSection);
+        setTrench(storedcurrentSection.name);
 
         const img = new window.Image();
-        img.src = storedSections.image;
+        img.src = storedcurrentSection.image;
         img.onload = () => {
             const aspectRatio = img.naturalWidth / img.naturalHeight;
             const newWidth = 500;
@@ -165,7 +166,7 @@ const MenuItem = () => {
                     }`}
                 >
                     <div>
-                        <TagItem label={"Sections"} />
+                        <TagItem label={"Section"} />
                         {MenuLinks?.map((menu) => (
                             <MenuLink
                                 key={menu.id}
@@ -306,7 +307,7 @@ const MenuItem = () => {
                                 />
                             )}
 
-                            {lines.map((line, i) => {
+                            {currentSection?.lines?.map((line, i) => {
                                 const points = line.points;
                                 let sumX = 0;
                                 let sumY = 0;

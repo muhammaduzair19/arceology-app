@@ -12,7 +12,7 @@ const Navbar = () => {
             <div className="flex items-center gap-3 w-64 h-full px-5">
                 {/* LOGO  */}
                 <span className="w-6 h-6 bg-gray-500 rounded-full " />
-                <h1 className="text-xl font-bold font-serif">
+                <h1 className="text-xl font-bold font-serif capitalize">
                     {trench ? trench : ""}
                 </h1>
             </div>

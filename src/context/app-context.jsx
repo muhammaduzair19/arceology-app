@@ -11,11 +11,15 @@ const AppContextProvider = ({ children }) => {
     const [isPencilSelect, setIsPencilSelect] = useState(false);
     const [isAddSectionOpen, setIsAddSectionOpen] = useState(false);
     const [trench, setTrench] = useState("");
+    const [currentSection, setCurrentSection] = useState({});
+    const [AllTrenches, setAllTrenches] = useState([]);
 
     const [lines, setLines] = useState(() => {
         try {
-            const storedLines = localStorage.getItem("lines");
-            return storedLines ? JSON.parse(storedLines) : [];
+            const storedcurrentSection = localStorage.getItem("currentSection");
+            return storedcurrentSection.lines.length > 0
+                ? JSON.parse(storedcurrentSection.lines)
+                : [];
         } catch (error) {
             console.error("Error parsing localStorage data:", error);
             return [];
@@ -44,17 +48,40 @@ const AppContextProvider = ({ children }) => {
                 );
                 polylines.splice(polylines.length, 1, newLine);
                 setLines([...lines, newLine]);
+                setCurrentSection((prev) => ({
+                    ...prev,
+                    lines: [...lines, newLine],
+                }));
+
                 localStorage.setItem(
                     "lines",
                     JSON.stringify([...lines, newLine])
+                );
+                localStorage.setItem(
+                    "currentSection",
+                    JSON.stringify({
+                        ...currentSection,
+                        lines: [...lines, newLine],
+                    })
                 );
             } else {
                 isDrawing.current = true;
                 const newLine = DrawPolyline(stage);
                 setLines([...lines, newLine]);
+                setCurrentSection((prev) => ({
+                    ...prev,
+                    lines: [...lines, newLine],
+                }));
                 localStorage.setItem(
                     "lines",
                     JSON.stringify([...lines, newLine])
+                );
+                localStorage.setItem(
+                    "currentSection",
+                    JSON.stringify({
+                        ...currentSection,
+                        lines: [...lines, newLine],
+                    })
                 );
             }
         }
@@ -94,7 +121,15 @@ const AppContextProvider = ({ children }) => {
             polylines.splice(polylines.length - 1, 1, newLine);
 
             setLines(polylines);
+            setCurrentSection((prev) => ({
+                ...prev,
+                lines: polylines,
+            }));
             localStorage.setItem("lines", JSON.stringify(polylines));
+            localStorage.setItem(
+                "currentSection",
+                JSON.stringify({ ...currentSection, lines: polylines })
+            );
         }
     };
     const handleMouseUp = () => {
@@ -138,6 +173,10 @@ const AppContextProvider = ({ children }) => {
             polylines.splice(polylines.length - 1, 1, newLine);
 
             setLines(polylines);
+            setCurrentSection((prev) => ({
+                ...prev,
+                lines: polylines,
+            }));
         }
     };
     const handleTouchEnd = () => {
@@ -152,13 +191,31 @@ const AppContextProvider = ({ children }) => {
         setRedoStack([...redoStack, removedLine]);
         setHistory([...history, lines]);
         setLines(newLines);
+        setCurrentSection((prev) => ({
+            ...prev,
+            lines: lines,
+        }));
+        localStorage.setItem("lines", JSON.stringify(newLines));
+        localStorage.setItem(
+            "currentSection",
+            JSON.stringify({ ...currentSection, lines: newLines })
+        );
     };
     const handleRedo = () => {
         if (redoStack.length === 0) return;
         const newRedoStack = [...redoStack];
         const restoredLine = newRedoStack.pop();
         setLines([...lines, restoredLine]);
+        setCurrentSection((prev) => ({
+            ...prev,
+            lines: [...lines, restoredLine],
+        }));
         setRedoStack(newRedoStack);
+        localStorage.setItem("lines", JSON.stringify(newLines));
+        localStorage.setItem(
+            "currentSection",
+            JSON.stringify({ ...currentSection, lines: newLines })
+        );
     };
 
     return (
@@ -175,6 +232,8 @@ const AppContextProvider = ({ children }) => {
                 redoStack,
                 zoom,
                 trench,
+                currentSection,
+                setCurrentSection,
                 setTrench,
                 setIsSidebarCollapsed,
                 setIsMenuItemCollapsed,

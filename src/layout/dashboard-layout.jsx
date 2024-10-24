@@ -1,7 +1,7 @@
-import { Outlet } from "react-router-dom"
-import Sidebar from "../components/sidebar"
-import Navbar from "../components/navbar/dashboard-nav"
-import { useAppContext } from "../context/app-context"
+import { Outlet } from "react-router-dom";
+import Sidebar from "../components/sidebar";
+import Navbar from "../components/navbar/dashboard-nav";
+import { useAppContext } from "../context/app-context";
 
 const DashboardLayout = () => {
     const { isSidebarCollapsed } = useAppContext();
@@ -10,14 +10,18 @@ const DashboardLayout = () => {
             {/* NAVBAR  */}
             <Navbar />
             {/* SIDEBAR  */}
-            <main className={`w-full min-h-screen h-full flex`} >
+            <main className={`w-full min-h-screen h-full flex`}>
                 <Sidebar />
-                <div className={`w-full h-full ${isSidebarCollapsed ? "md:pl-24" : "md:pl-64"} py-2 px-4 md:px-8 overflow-auto`}>
+                <div
+                    className={`w-full h-full ${
+                        isSidebarCollapsed ? "md:pl-24" : "md:pl-64"
+                    } fixed py-2 px-4 md:px-8 overflow-auto`}
+                >
                     <Outlet />
                 </div>
             </main>
         </div>
-    )
-}
+    );
+};
 
-export default DashboardLayout
+export default DashboardLayout;

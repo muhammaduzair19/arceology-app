@@ -57,7 +57,7 @@ const digs = [
 
 const Dig = () => {
     return (
-        <div className="min-w-full h-full">
+        <div className="min-w-full ">
             <div className="flex w-full justify-between items-center">
                 <BreadCrumb pageName={'Digs'} />
                 <button className="py-2 px-8 md:rounded-md rounded-sm bg-blue-700 text-white flex items-center gap-2" >
