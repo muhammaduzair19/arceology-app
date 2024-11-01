@@ -25,6 +25,7 @@ import Relations from "./pages/app-pages/relations";
 import NotFound from "./pages/not-found";
 import { useEffect } from "react";
 import { useAppContext } from "./context/app-context";
+import Options from "./pages/app-pages/options";
 
 const App = () => {
     const { setCurrentSection, setTrench } = useAppContext();
@@ -53,6 +54,7 @@ const App = () => {
                 </Route>
                 <Route path="/" element={<AppLayout />}>
                     <Route path="/app" element={<MenuItem />} />
+                    <Route path="/options" element={<Options />} />
                     <Route path="/points" element={<Points />} />
                     <Route path="/features" element={<Features />} />
                     <Route path="/relations" element={<Relations />} />

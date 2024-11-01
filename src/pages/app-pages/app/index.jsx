@@ -196,6 +196,15 @@ const MenuItem = () => {
                             isCollapsed={isMenuItemCollapsed}
                         />
                     </div>
+                    <div>
+                        <TagItem label={"Options"} />
+                        <MenuLink
+                            to={"/options"}
+                            id={0}
+                            label={"Options"}
+                            isCollapsed={isMenuItemCollapsed}
+                        />
+                    </div>
 
                     <div
                         className={`w-full px-4 ${
